@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電光掲示板シミュレーター</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div>
+        <textarea name="text" id="text" cols="30" rows="10" placeholder="表示したい<font color ='red'>文字</font>と<font color = 'green'>音声を再生したい方</font>は音声ファイルを指定して、実行してください。"></textarea>
+    </div>
+    <div class="select">
+        <input id="file1" type="file" accept=".mp3,.m4a,.aac,.wav,.flac">
+    </div>
+    <input type="button" value="実行" onclick="func()">
+    <p class="ledText"><span id="ledText">表示したい<font color ="red">文字</font>と<font color = "green">音声を再生したい方</font>は音声ファイルを指定して、実行してください。</span></p>
+    <script>
+        var alarm;
+        alarm = new Audio();
+        window.addEventListener('load', () => {
+            const f = document.getElementById('file1');
+            f.addEventListener('change', evt => {
+                let input = evt.target;
+                if (input.files.length == 0) {
+                    return;
+                }
+                const file = input.files[0];
+                if (!file.type.match('audio.*')) {
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = () => {
+                    alarm.pause();
+                    alarm.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+        function func() {
+            alarm.pause();
+            var text = document.getElementById("text").value;
+            text = text.split("\n");
+            var output_text = ""
+            var size = text.length
+            for (var i = 0; i < size; i++) {
+                output_text += text[i] + "　　　　　　　　　　　　　　";
+            }
+            document.getElementById("ledText").textContent = output_text;
+            alarm.play();
+    
+    
+        }
+    </script>
+</body>
+</html>
